@@ -1,0 +1,44 @@
+# Operating System Files
+
+*.DS_Store
+Thumbs.db
+*.sw?
+.#*
+*#
+*~
+*.sublime-*
+
+# Build Artifacts
+
+.gradle/
+build/
+target/
+bin/
+dependency-reduced-pom.xml
+
+# Eclipse Project Files
+
+.classpath
+.project
+.settings/
+
+# IntelliJ IDEA Files
+
+*.iml
+*.ipr
+*.iws
+*.idea
+
+README.html
+
+/conf/confcenter-cache-dir/*
+/conf/log4j.properties
+/conf/web-conf/nametestv1.wtable*
+/conf/web-conf/855e4f6c8a418d83ee212405f89ca8de/*
+/conf-center-demo.zip
+/conf/client-conf/nametestv1.wtable.58dns.org_*.txt
+/conf/client-conf/nameprod.wtable.58dns.org_*.txt
+/conf/client-conf/conf-center_test.properties
+
+logs/
+
