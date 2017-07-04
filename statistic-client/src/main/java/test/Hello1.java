@@ -1,5 +1,4 @@
-
-import org.junit.Test;
+package test;
 
 /**
  * Created by zhudongchang on 2017/6/30.
