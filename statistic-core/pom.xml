@@ -6,11 +6,11 @@
 
     <groupId>com.bj58.huangye</groupId>
     <artifactId>com.bj58.huangye.statistic.core</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
 
     <parent>
         <groupId>com.bj58.huangye</groupId>
         <artifactId>com.bj58.huangye.statistic.parent</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.0.0</version>
     </parent>
 </project>
