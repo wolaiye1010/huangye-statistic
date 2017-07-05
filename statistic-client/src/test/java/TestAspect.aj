@@ -1,5 +1,3 @@
-package test;
-
 import org.aspectj.lang.annotation.Aspect;
 
 /**
