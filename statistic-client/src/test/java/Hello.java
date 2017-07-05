@@ -25,11 +25,13 @@ public class Hello {
 //        foo();
         Hello1.foo();
         System.out.println("bar.........");
-        bar(2);
+        System.out.println(bar(2));
     }
 
 
-    public void bar(int i){
+    public int bar(int i){
+        System.out.println("bar int 1");
+        return i;
     }
 
     public void foo(){

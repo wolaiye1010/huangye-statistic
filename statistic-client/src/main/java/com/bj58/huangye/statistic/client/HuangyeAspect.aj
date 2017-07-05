@@ -23,7 +23,7 @@ public aspect HuangyeAspect {
     @Pointcut("execution(* *..* (..))&&!within(com.bj58.huangye.statistic..*)")
     public void bj58PointCut(){}
 
-    void around():bj58PointCut(){
+    Object around():bj58PointCut(){
         if(isStackStart()){
             mapList.clear();
         }
@@ -39,7 +39,7 @@ public aspect HuangyeAspect {
             put("start_time",startTime);
         }});
 
-        proceed();
+        Object res=proceed();
 
         final long endTime = System.nanoTime();
         mapList.add(new HashMap<String,Object>(){{
@@ -55,6 +55,7 @@ public aspect HuangyeAspect {
         if(isStackEnd()){
             analysis();
         }
+        return res;
     }
 
     private void analysis(){
