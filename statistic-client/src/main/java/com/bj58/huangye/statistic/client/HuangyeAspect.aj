@@ -1,7 +1,11 @@
 package com.bj58.huangye.statistic.client;
 
 import com.alibaba.fastjson.JSON;
+import com.bj58.huangye.statistic.core.redis.RedisConfigEnum;
+import com.bj58.huangye.statistic.core.redis.RedisFactory;
+import com.bj58.huangye.statistic.core.util.CalendarUtil;
 import org.aspectj.lang.annotation.*;
+import redis.clients.jedis.Jedis;
 
 import java.util.*;
 
@@ -19,13 +23,9 @@ public aspect HuangyeAspect {
     @Pointcut("execution(* *..* (..))&&!within(com.bj58.huangye.statistic..*)")
     public void bj58PointCut(){}
 
-    private void around():bj58PointCut(){
+    void around():bj58PointCut(){
         if(isStackStart()){
             mapList.clear();
-//            mapList.add(new HashMap<String,Object>(){{
-//                put("method","main()");
-//                put("start_time",System.nanoTime());
-//            }});
         }
 
         synchronized (HuangyeAspect.class){
@@ -53,21 +53,12 @@ public aspect HuangyeAspect {
         }
 
         if(isStackEnd()){
-//            mapList.add(new HashMap<String,Object>(){{
-//                put("method","main()");
-//                put("end_time",System.nanoTime());
-//            }});
             analysis();
         }
     }
 
     private void analysis(){
-//        for (Map<String, Object> map : mapList) {
-//            System.out.println(map);
-//        }
-
         Stack<CallTreeNode> callTreeNodesStack=new Stack<CallTreeNode>();
-
         CallTreeNode callTreeNode = null;
         for (final Map<String, Object> map : mapList) {
             if(map.containsKey("start_time")){
@@ -92,13 +83,8 @@ public aspect HuangyeAspect {
         }
 
         analysisExecTime(callTreeNode);
-//        System.out.println(JSON.toJSONString(callTreeNode,true));
-
         buildXhprofDataMap(callTreeNode);
-        System.out.println(JSON.toJSONString(xhprofDataNodeMap,true));
     }
-
-
 
     private void analysisExecTime(CallTreeNode callTreeNode){
         callTreeNode.setTotalTime(callTreeNode.getEndTime()-callTreeNode.getStartTime());
@@ -110,9 +96,7 @@ public aspect HuangyeAspect {
         callTreeNode.setSelfTime(callTreeNode.getTotalTime()-childRenExecTotal);
     }
 
-
     private void buildXhprofDataMap(CallTreeNode callTreeNode){
-
         //构造main root
         CallTreeNode mainRoot= new CallTreeNode();
         mainRoot.setTotalTime(callTreeNode.getTotalTime());
@@ -123,6 +107,20 @@ public aspect HuangyeAspect {
         mainRoot.setParent(null);
 
         statisticXhprofDataMap(mainRoot);
+
+        Map<String,Object> xhprofDataNodeMapExt=new HashMap<String, Object>();
+        for (Map.Entry<String,XhprofDataNode> item : xhprofDataNodeMap.entrySet()) {
+            xhprofDataNodeMapExt.put(item.getKey(),item.getValue());
+        }
+        xhprofDataNodeMapExt.put("url","58huangye");
+        xhprofDataNodeMapExt.put("server",new HashMap<String,Object>(){{
+            put("REQUEST_TIME",System.currentTimeMillis()/1000);
+            put("HTTP_HOST","58.com");
+            put("REQUEST_URI","/huangye");
+        }});
+
+        String data = JSON.toJSONString(xhprofDataNodeMapExt);
+        saveDataToRedis(data);
     }
 
     private void statisticXhprofDataMap(final CallTreeNode callTreeNode){
@@ -150,9 +148,19 @@ public aspect HuangyeAspect {
         }
     }
 
+    private static final String XHPROF_KEY="fuwu_xhprof_XhprofUtil";
+
+    private void saveDataToRedis(String data){
+        Jedis client = RedisFactory.getClient(RedisConfigEnum.GROUP_FUWU);
+        client.lpush(XHPROF_KEY,data);
+        long expireAt= CalendarUtil.getTomorrowDawnUinxTimestamp();
+        client.expireAt(XHPROF_KEY,expireAt);
+    }
+
     private boolean isStackStart(){
         return 0==stackCount;
     }
+
     private boolean isStackEnd(){
         return 0==stackCount;
     }

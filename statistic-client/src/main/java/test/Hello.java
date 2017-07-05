@@ -2,6 +2,10 @@ package test;
 
 import org.junit.Test;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by zhudongchang on 2017/6/30.
  */
@@ -42,8 +46,18 @@ public class Hello {
 //        foo();
     }
 
-    public static void main(String[] args) {
-        Hello he = new Hello();
-        he.sayHello();
+//    public static void main(String[] args) {
+//        Hello he = new Hello();
+//        he.sayHello();
+//    }
+
+
+
+
+    public static void main(String[] args) throws ParseException {
+        long time = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse("09/22/2008 16:33:00").getTime();
+        System.out.println(time);
+        System.out.println(new Date(2008,9,22,16,33,0).getTime());
+        System.out.println(new Date().getTime()/1000);
     }
 }
