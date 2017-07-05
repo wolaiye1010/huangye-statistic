@@ -38,6 +38,7 @@ public class Hello {
     @Test
     public void testMethod(){
         bar();
+        bar();
 //        foo();
     }
 

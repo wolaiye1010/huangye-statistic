@@ -14,6 +14,19 @@ public class CallTreeNode {
     private long selfTime;
 
     private long totalTime;
+    private CallTreeNode parent;
+
+    public CallTreeNode getParent() {
+        return parent;
+    }
+
+    public boolean isRoot(){
+        return null==parent;
+    }
+
+    public void setParent(CallTreeNode parent) {
+        this.parent = parent;
+    }
 
     public long getSelfTime() {
         return selfTime;
