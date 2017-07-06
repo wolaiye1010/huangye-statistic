@@ -13,6 +13,7 @@
         <module>statistic-client</module>
         <module>statistic-core</module>
         <module>statistic-web</module>
+        <module>statistic-demo</module>
     </modules>
 
     <dependencies>
