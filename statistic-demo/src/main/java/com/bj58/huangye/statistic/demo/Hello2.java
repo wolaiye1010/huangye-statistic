@@ -1,4 +1,4 @@
-package test;
+package com.bj58.huangye.statistic.demo;
 
 import org.junit.Test;
 
@@ -8,14 +8,14 @@ import org.junit.Test;
 public class Hello2 {
 
 //    public void sayHello(int i){
-//        System.out.println("test.Hello2 AspectJ."+i);
+//        System.out.println("com.bj58.huangye.statistic.demo.Hello2 AspectJ."+i);
 //    }
 
     public void sayHello(){
         System.out.println(System.nanoTime());
         System.out.println(System.nanoTime());
 //        sayHello(100);
-        System.out.println("test.Hello2 AspectJ.");
+        System.out.println("com.bj58.huangye.statistic.demo.Hello2 AspectJ.");
 //        sayHello(101);
     }
 
