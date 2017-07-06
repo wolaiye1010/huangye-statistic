@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.bj58.huangye.statistic.core.redis.RedisConfigEnum;
 import com.bj58.huangye.statistic.core.redis.RedisFactory;
 import com.bj58.huangye.statistic.core.util.CalendarUtil;
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import redis.clients.jedis.Jedis;
 
@@ -24,6 +26,7 @@ public aspect HuangyeAspect {
     public void bj58PointCut(){}
 
     Object around():bj58PointCut(){
+        System.out.println(thisJoinPoint+"begin");
         if(isStackStart()){
             mapList.clear();
         }
@@ -55,6 +58,8 @@ public aspect HuangyeAspect {
         if(isStackEnd()){
             analysis();
         }
+
+        System.out.println(thisJoinPoint+"after");
         return res;
     }
 
