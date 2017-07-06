@@ -6,7 +6,7 @@ import org.aspectj.lang.annotation.Aspect;
 @Aspect
 public aspect TestAspect {
 
-//    void around():call(void test.Hello.sayHello()){
+//    void around():call(void test.Hello2.sayHello()){
 //        System.out.println("begin transaction....");
 //        proceed();//代表调用原来的sayHello()方法
 //        System.out.println("end transaction....");

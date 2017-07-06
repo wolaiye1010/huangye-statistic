@@ -10,14 +10,14 @@ import java.util.Date;
 public class Hello {
 
 //    public void sayHello(int i){
-//        System.out.println("test.Hello AspectJ."+i);
+//        System.out.println("test.Hello2 AspectJ."+i);
 //    }
 
     public void sayHello(){
         System.out.println(System.nanoTime());
         System.out.println(System.nanoTime());
 //        sayHello(100);
-        System.out.println("test.Hello AspectJ.");
+        System.out.println("test.Hello2 AspectJ.");
 //        sayHello(101);
     }
 
