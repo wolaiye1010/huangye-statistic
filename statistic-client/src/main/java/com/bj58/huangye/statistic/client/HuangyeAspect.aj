@@ -17,27 +17,36 @@ import java.util.*;
 @Aspect
 public aspect HuangyeAspect {
 
-    private static List<Map<String,Object>> mapList =new ArrayList<Map<String,Object>>();
-    private static int stackCount=0;
+    private static ThreadLocal<List<Map<String,Object>>> mapList =new ThreadLocal<List<Map<String, Object>>>(){
+        @Override
+        protected List<Map<String, Object>> initialValue() {
+            return new ArrayList<Map<String, Object>>();
+        }
+    };
 
     private static Map<String,XhprofDataNode> xhprofDataNodeMap=new HashMap<String, XhprofDataNode>();
 
-    @Pointcut("execution(* *..* (..))&&!within(com.bj58.huangye.statistic..*)")
+    private static ThreadLocal<Integer> stackCount=new ThreadLocal<Integer>(){
+        @Override
+        protected Integer initialValue() {
+            return 0;
+        }
+    };
+
+    @Pointcut("execution(* *..* (..))&&!within(com.bj58.huangye.statistic.client..*)")
     public void bj58PointCut(){}
 
     Object around():bj58PointCut(){
         System.out.println(thisJoinPoint+"begin");
         if(isStackStart()){
-            mapList.clear();
+            mapList.get().clear();
         }
 
-        synchronized (HuangyeAspect.class){
-            stackCount++;
-        }
+        stackCount.set(stackCount.get()+1);
 
         final String signature =thisJoinPoint.getSignature().toString();
         final long startTime = System.nanoTime();
-        mapList.add(new HashMap<String,Object>(){{
+        mapList.get().add(new HashMap<String,Object>(){{
             put("method",signature);
             put("start_time",startTime);
         }});
@@ -45,15 +54,13 @@ public aspect HuangyeAspect {
         Object res=proceed();
 
         final long endTime = System.nanoTime();
-        mapList.add(new HashMap<String,Object>(){{
+        mapList.get().add(new HashMap<String,Object>(){{
             put("method",signature);
             put("end_time",endTime);
         }});
 
 
-        synchronized (HuangyeAspect.class){
-            stackCount--;
-        }
+        stackCount.set(stackCount.get()-1);
 
         if(isStackEnd()){
             analysis();
@@ -66,7 +73,7 @@ public aspect HuangyeAspect {
     private void analysis(){
         Stack<CallTreeNode> callTreeNodesStack=new Stack<CallTreeNode>();
         CallTreeNode callTreeNode = null;
-        for (final Map<String, Object> map : mapList) {
+        for (final Map<String, Object> map : mapList.get()) {
             if(map.containsKey("start_time")){
                 callTreeNodesStack.push(new CallTreeNode(){{
                     setStartTime((Long) map.get("start_time"));
@@ -102,7 +109,7 @@ public aspect HuangyeAspect {
         callTreeNode.setSelfTime(callTreeNode.getTotalTime()-childRenExecTotal);
     }
 
-    private void buildXhprofDataMap(CallTreeNode callTreeNode){
+    private synchronized void buildXhprofDataMap(CallTreeNode callTreeNode){
         //构造main root
         CallTreeNode mainRoot= new CallTreeNode();
         mainRoot.setTotalTime(callTreeNode.getTotalTime());
@@ -112,6 +119,7 @@ public aspect HuangyeAspect {
         callTreeNode.setParent(mainRoot);
         mainRoot.setParent(null);
 
+        xhprofDataNodeMap.clear();
         statisticXhprofDataMap(mainRoot);
 
         Map<String,Object> xhprofDataNodeMapExt=new HashMap<String, Object>();
@@ -164,10 +172,10 @@ public aspect HuangyeAspect {
     }
 
     private boolean isStackStart(){
-        return 0==stackCount;
+        return 0==stackCount.get();
     }
 
     private boolean isStackEnd(){
-        return 0==stackCount;
+        return 0==stackCount.get();
     }
 }

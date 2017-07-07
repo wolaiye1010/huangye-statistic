@@ -1,4 +1,4 @@
-package com.bj58.huangye.demo;
+package com.bj58.huangye.statistic.demo;
 
 import org.junit.Test;
 
