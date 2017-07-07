@@ -37,6 +37,7 @@ public aspect HuangyeAspect {
     public void bj58PointCut(){}
 
     Object around():bj58PointCut(){
+        System.out.println("thread:"+Thread.currentThread().getName());
         System.out.println(thisJoinPoint+"begin");
         if(isStackStart()){
             mapList.get().clear();
@@ -67,6 +68,7 @@ public aspect HuangyeAspect {
         }
 
         System.out.println(thisJoinPoint+"after");
+        System.out.println("thread:"+Thread.currentThread().getName());
         return res;
     }
 

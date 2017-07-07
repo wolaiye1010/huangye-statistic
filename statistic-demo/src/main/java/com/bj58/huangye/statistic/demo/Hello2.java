@@ -19,13 +19,13 @@ public class Hello2 {
 //        sayHello(101);
     }
 
-    public void bar(){
+    public static void bar(){
         System.out.println("bar.........");
         System.out.println(bar(2));
     }
 
 
-    public int bar(int i){
+    public static int bar(int i){
         System.out.println("bar int 1");
         return i;
     }
@@ -43,7 +43,29 @@ public class Hello2 {
     }
 
     public static void main(String[] args) {
-        Hello2 he = new Hello2();
-        he.sayHello();
+        new Thread("1"){
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(100L);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                bar();
+            }
+        }.start();
+
+
+        new Thread("2"){
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(80L);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                bar();
+            }
+        }.start();
     }
 }
