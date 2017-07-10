@@ -35,37 +35,31 @@ public class Hello2 {
     }
 
 
-    @Test
-    public void testMethod(){
-        bar();
-        bar();
-//        foo();
-    }
-
     public static void main(String[] args) {
-        new Thread("1"){
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(100L);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                bar();
-            }
-        }.start();
-
-
-        new Thread("2"){
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(80L);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                bar();
-            }
-        }.start();
+//        new Thread("1"){
+//            @Override
+//            public void run() {
+//                try {
+//                    Thread.sleep(100L);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//                bar();
+//            }
+//        }.start();
+//
+//
+//        new Thread("2"){
+//            @Override
+//            public void run() {
+//                try {
+//                    Thread.sleep(80L);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//                bar();
+//            }
+//        }.start();
+        bar();
     }
 }

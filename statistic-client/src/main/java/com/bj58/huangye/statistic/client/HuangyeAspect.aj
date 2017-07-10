@@ -9,6 +9,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import redis.clients.jedis.Jedis;
 
+import java.io.File;
 import java.util.*;
 
 /**
@@ -36,10 +37,26 @@ public aspect HuangyeAspect {
     @Pointcut("execution(* *..* (..))&&!within(com.bj58.huangye.statistic.client..*)")
     public void bj58PointCut(){}
 
+//    @Pointcut("execution(* com.bj58.wf.mvc.MvcFilter.doFilter(..))")
+//    public void bj58CfowPointCut(){}
+    @Pointcut("execution(* com.bj58.qdyw.infolist.web.controllers.commonAction(..))")
+    public void bj58CfowPointCut(){}
+
+
+    pointcut bj58Cfow():cflow(bj58CfowPointCut())&&!within(com.bj58.huangye.statistic.client..*);
+
+
     Object around():bj58PointCut(){
-        System.out.println("thread:"+Thread.currentThread().getName());
-        System.out.println(thisJoinPoint+"begin");
+//    Object around():bj58Cfow(){
+        boolean isCallMethod="method-call"==thisJoinPoint.getKind();
+        if(isCallMethod){
+            proceed();
+            return null;
+        }
+
         if(isStackStart()){
+//            System.out.println(String.format("threadId:%s,threadName:%s  ----start----",
+//                    Thread.currentThread().getId(),Thread.currentThread().getName()));
             mapList.get().clear();
         }
 
@@ -64,11 +81,11 @@ public aspect HuangyeAspect {
         stackCount.set(stackCount.get()-1);
 
         if(isStackEnd()){
+//            System.out.println(String.format("threadId:%s,threadName:%s  ----end----",
+//                    Thread.currentThread().getId(),Thread.currentThread().getName()));
             analysis();
         }
 
-        System.out.println(thisJoinPoint+"after");
-        System.out.println("thread:"+Thread.currentThread().getName());
         return res;
     }
 
