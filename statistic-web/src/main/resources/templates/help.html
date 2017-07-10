@@ -1,0 +1,18 @@
+<!-- 耗时统计 -->
+<th:block layout:decorator="layout/layout" layout:fragment="content">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">使用说明</h4>
+        </div>
+        <div class="panel-body">
+            想测试那个页面就在那个url 后添加 huangye_xhprof=true
+            eg: http://bj.ganji.com/banjia/?huangye_xhprof=true
+            就可以在这个后台里看到 ,点开就可以看到 请求对堆栈信息,方便大家排查 耗时 服务,及错误
+        </div>
+    </div>
+    <ul class="list-group">
+        <li class="list-group-item">
+            问题反馈：朱东昌(zhudongchang);张波(zhangbo23)
+        </li>
+    </ul>
+</th:block>
