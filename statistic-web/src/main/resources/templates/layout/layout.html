@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8" />
     <script src="/bootstrap/js/jquery-1.10.2.js" />
+    <script src="/bootstrap/js/util.js" />
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
     <script src="/bootstrap/js/bootstrap.min.js" />
 </head>
@@ -22,8 +23,8 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div class="list-group">
-                        <a href="/statistic/times" class="list-group-item">耗时统计</a>
-                        <a href="/statistic/help" class="list-group-item">帮助</a>
+                        <a id="times" href="/statistic/times?id=times" class="list-group-item">耗时统计</a>
+                        <a id="help" href="/statistic/help?id=help" class="list-group-item">帮助</a>
                     </div>
                 </div>
             </div>
@@ -35,4 +36,15 @@
     </div>
 </div>
 </body>
+
+<script th:inline="javascript">
+    var id = Util.param.getId('id');
+    $('.list-group').find('a').removeClass('active');
+
+    if (id == null) {
+        $('#times').addClass('active');
+    } else {
+        $('#' + id).addClass('active');
+    }
+</script>
 </html>
