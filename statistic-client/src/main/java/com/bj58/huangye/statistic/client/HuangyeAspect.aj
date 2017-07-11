@@ -5,12 +5,9 @@ import com.bj58.huangye.statistic.core.redis.RedisConfigEnum;
 import com.bj58.huangye.statistic.core.redis.RedisConst;
 import com.bj58.huangye.statistic.core.redis.RedisFactory;
 import com.bj58.huangye.statistic.core.util.CalendarUtil;
-import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import redis.clients.jedis.Jedis;
 
-import java.io.File;
 import java.util.*;
 
 /**
@@ -184,7 +181,7 @@ public aspect HuangyeAspect {
 
 
     private void saveDataToRedis(String data){
-        Jedis client = RedisFactory.getClient(RedisConfigEnum.GROUP_FUWU);
+        Jedis client = RedisFactory.getClient(RedisConfigEnum.TEST);
         client.lpush(RedisConst.XHPROF_KEY,data);
         long expireAt= CalendarUtil.getTomorrowDawnUinxTimestamp();
         client.expireAt(RedisConst.XHPROF_KEY,expireAt);

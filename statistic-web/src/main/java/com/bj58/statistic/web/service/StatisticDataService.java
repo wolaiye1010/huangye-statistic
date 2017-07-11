@@ -18,7 +18,7 @@ import java.util.Map;
 @Service
 public class StatisticDataService {
     public List<Map<String, Object>> getList(){
-        Jedis client = RedisFactory.getClient(RedisConfigEnum.GROUP_FUWU);
+        Jedis client = RedisFactory.getClient(RedisConfigEnum.TEST);
         List<String> lrange = client.lrange(RedisConst.XHPROF_KEY, 0, -1);
         List<Map<String,Object>> list=new ArrayList<>();
         lrange.forEach(x->{

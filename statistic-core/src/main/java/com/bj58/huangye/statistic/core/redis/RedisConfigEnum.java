@@ -4,10 +4,10 @@ package com.bj58.huangye.statistic.core.redis;
  * Created by zhudongchang on 2017/7/5.
  */
 public enum RedisConfigEnum {
-    GROUP_FUWU(new RedisConfig(){{
-        setHost("test19656.rdb.58dns.org");
-        setPort(6050);
-        setAuth("7b48e904612cdcdf");
+    TEST(new RedisConfig(){{
+        setHost("10.9.193.121");
+        setPort(6379);
+        setAuth("f225f37463ac191c");
     }}),
     ;
 
