@@ -14,25 +14,16 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>http://bj.ganji.com/banjia/</td>
-                    <td>2017-07-10 13:53:56</td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>http://bj.ganji.com/banjia/</td>
-                    <td>2017-07-10 13:53:56</td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>http://bj.ganji.com/banjia/</td>
-                    <td>2017-07-10 13:53:56</td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>http://bj.ganji.com/banjia/</td>
-                    <td>2017-07-10 13:53:56</td>
+
+                <tr th:each="item:${list}">
+                    <td th:text="${itemStat.index+1}"></td>
+                    <td>
+                        <form method="post" target="_blank" action="http://10.9.193.121/save.php">
+                            <input type="hidden" name="xhprof_data" th:value="${item.xhprof_data}"/>
+                            <button type="submit" class="btn btn-link" th:text="${item.url}"></button>
+                        </form>
+                    </td>
+                    <td th:text="${#dates.format(item.request_time, 'yyyy-MM-dd HH:mm:ss')}"></td>
                 </tr>
                 </tbody>
             </table>

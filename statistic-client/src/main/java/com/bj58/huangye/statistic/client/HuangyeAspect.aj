@@ -2,6 +2,7 @@ package com.bj58.huangye.statistic.client;
 
 import com.alibaba.fastjson.JSON;
 import com.bj58.huangye.statistic.core.redis.RedisConfigEnum;
+import com.bj58.huangye.statistic.core.redis.RedisConst;
 import com.bj58.huangye.statistic.core.redis.RedisFactory;
 import com.bj58.huangye.statistic.core.util.CalendarUtil;
 import org.aspectj.lang.JoinPoint;
@@ -181,13 +182,12 @@ public aspect HuangyeAspect {
         }
     }
 
-    private static final String XHPROF_KEY="fuwu_xhprof_XhprofUtil";
 
     private void saveDataToRedis(String data){
         Jedis client = RedisFactory.getClient(RedisConfigEnum.GROUP_FUWU);
-        client.lpush(XHPROF_KEY,data);
+        client.lpush(RedisConst.XHPROF_KEY,data);
         long expireAt= CalendarUtil.getTomorrowDawnUinxTimestamp();
-        client.expireAt(XHPROF_KEY,expireAt);
+        client.expireAt(RedisConst.XHPROF_KEY,expireAt);
     }
 
     private boolean isStackStart(){
