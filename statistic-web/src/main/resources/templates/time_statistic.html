@@ -2,31 +2,55 @@
 <th:block layout:decorator="layout/layout" layout:fragment="content">
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h4 class="panel-title">耗时统计</h4>
+            <div class="row">
+                <div class="col-md-8">
+                    <span class="label label-default">耗时统计</span>
+                </div>
+                <div class="col-md-4">
+                    <a class="btn btn-primary pull-right" id="clear_list" href="javascript:void(0);">清空列表</a>
+                </div>
+            </div>
         </div>
         <div class="panel-body">
             <table class="table table-striped">
                 <thead>
                 <tr>
                     <td>编号</td>
-                    <td>url</td>
+                    <td>耗时原生</td>
+                    <td>耗时图</td>
+                    <td>耗时（毫秒）</td>
                     <td>时间</td>
                 </tr>
                 </thead>
                 <tbody>
 
-                <tr th:each="item:${list}">
+                <tr th:each="item:${list}" th:class="${item.class_name}">
                     <td th:text="${itemStat.index+1}"></td>
+                    <td><a th:href="@{/native_data/{index}(index=${itemStat.index+1})}" target="_blank">原生查看</a></td>
                     <td>
                         <form method="post" target="_blank" action="http://10.9.193.121/save.php">
                             <input type="hidden" name="xhprof_data" th:value="${item.xhprof_data}"/>
-                            <button type="submit" class="btn btn-link" th:text="${item.url}"></button>
+                            <button type="submit" class="btn btn-link" th:text="图片查看"></button>
                         </form>
                     </td>
+                    <td th:text="${item.total_time}"></td>
                     <td th:text="${#dates.format(item.request_time, 'yyyy-MM-dd HH:mm:ss')}"></td>
                 </tr>
                 </tbody>
             </table>
         </div>
     </div>
+    <script>
+        $(function () {
+            $('#clear_list').click(function(){
+                $.get("/api/clear_list",function(data){
+                    if(data){
+                        location.reload();
+                    }else{
+                        alert("失败");
+                    }
+                });
+            });
+        });
+    </script>
 </th:block>

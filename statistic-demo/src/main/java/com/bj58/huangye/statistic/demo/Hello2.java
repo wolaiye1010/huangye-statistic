@@ -60,6 +60,14 @@ public class Hello2 {
 //                bar();
 //            }
 //        }.start();
-        bar();
+//        bar();
     }
+
+    private static ThreadLocal<Integer> threadLocal=new ThreadLocal<Integer>(){
+        @Override
+        protected Integer initialValue() {
+            System.out.println("init");
+            return new Integer(0);
+        }
+    };
 }

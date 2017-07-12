@@ -82,6 +82,8 @@ public aspect HuangyeAspect {
 //            System.out.println(String.format("threadId:%s,threadName:%s  ----end----",
 //                    Thread.currentThread().getId(),Thread.currentThread().getName()));
             analysis();
+            mapList.remove();
+            stackCount.remove();
         }
 
         return res;
