@@ -60,20 +60,45 @@ public aspect HuangyeAspect {
 
         stackCount.set(stackCount.get()+1);
 
-        final String signature =thisJoinPoint.getSignature().toString();
+        boolean isRecursion=false;
+
+        String signature =thisJoinPoint.getSignature().toString();
         final long startTime = System.nanoTime();
-        mapList.get().add(new HashMap<String,Object>(){{
-            put("method",signature);
-            put("start_time",startTime);
-        }});
+        if(mapList.get().size()>1){
+            //处理递归调用
+            Map<String, Object> mapLastItem = mapList.get().get(mapList.get().size() - 1);
+            String lastMethod=mapLastItem.get("method").toString();
+            String lastMethodRes=lastMethod.replaceAll("@\\d+$","");
+            if(lastMethodRes.equals(signature)){
+                int recursionEndAppend=0;
+                if(lastMethod.contains("@")){
+                    isRecursion=true;
+                    recursionEndAppend=Integer.valueOf(lastMethod.split("@")[1]);
+                }
+
+                recursionEndAppend++;
+                signature+="@"+recursionEndAppend;
+            }
+        }
+
+
+        HashMap<String, Object> startHashMap = new HashMap<String, Object>();
+        startHashMap.put("method", signature);
+        startHashMap.put("start_time", startTime);
+        mapList.get().add(startHashMap);
 
         Object res=proceed();
 
         final long endTime = System.nanoTime();
-        mapList.get().add(new HashMap<String,Object>(){{
-            put("method",signature);
-            put("end_time",endTime);
-        }});
+
+        if(isRecursion){
+
+        }
+
+        HashMap<String, Object> endHashMap = new HashMap<String, Object>();
+        endHashMap.put("method", signature);
+        endHashMap.put("end_time", endTime);
+        mapList.get().add(endHashMap);
 
 
         stackCount.set(stackCount.get()-1);
@@ -195,5 +220,12 @@ public aspect HuangyeAspect {
 
     private boolean isStackEnd(){
         return 0==stackCount.get();
+    }
+
+
+    public static void main(String[] args) {
+        String key="void saveDataToRedis(String data)@1a";
+        System.out.println(key.replaceAll("@\\d+$",""));
+
     }
 }

@@ -26,7 +26,12 @@
 
                 <tr th:each="item:${list}" th:class="${item.class_name}">
                     <td th:text="${itemStat.index+1}"></td>
-                    <td><a th:href="@{/native_data/{index}(index=${itemStat.index+1})}" target="_blank">原生查看</a></td>
+                    <td>
+                        <form method="post" target="_blank" action="/native_data">
+                            <input type="hidden" name="xhprof_data" th:value="${item.xhprof_data}"/>
+                            <button type="submit" class="btn btn-link" th:text="原生查看"></button>
+                        </form>
+                    </td>
                     <td>
                         <form method="post" target="_blank" action="http://10.9.193.121/save.php">
                             <input type="hidden" name="xhprof_data" th:value="${item.xhprof_data}"/>

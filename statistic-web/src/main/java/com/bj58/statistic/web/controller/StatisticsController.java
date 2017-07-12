@@ -22,7 +22,7 @@ import java.util.Map;
 public class StatisticsController {
 
     @Autowired
-    StatisticDataService statisticDataService;
+    private StatisticDataService statisticDataService;
 
     @RequestMapping(value = "/")
     public ModelAndView index() {
@@ -36,10 +36,10 @@ public class StatisticsController {
         return "time_statistic";
     }
 
-    @RequestMapping("/native_data/{index}")
+    @RequestMapping("/native_data")
     @ResponseBody
-    public String nativeData(@PathVariable Integer index){
-        return statisticDataService.getNativeData(index);
+    public String nativeData(HttpServletRequest request){
+        return request.getParameter("xhprof_data");
     }
 
     @RequestMapping(value = "/statistic/help")

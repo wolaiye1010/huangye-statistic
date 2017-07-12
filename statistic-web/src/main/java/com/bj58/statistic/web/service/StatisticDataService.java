@@ -38,6 +38,24 @@ public class StatisticDataService {
 //            map.put("first_call",firstCallKey.replace("main()==>",""));
             map.put("request_time",new Date(Long.valueOf(server.get("REQUEST_TIME").toString())*1000));
             map.put("xhprof_data",x);
+
+//            for (Object o : map.entrySet()) {
+//                Map.Entry item=(Map.Entry)o;
+//
+//                String key=item.getKey().toString();
+//                if(key.contains("==>")){
+//
+//                    if(key.contains("isSatisfiedBy")){
+//
+//                        System.out.println(key);
+//                    }
+//
+//                    String[] split = key.split("==>");
+//                    if(split[0].equals(split[1])){
+//                        map.remove(item.getKey());
+//                    }
+//                }
+//            }
             double totalTime=(Integer)(((Map)map.get("main()")).get("wt"))/1000.0;
             map.put("total_time",totalTime);
             String className="";

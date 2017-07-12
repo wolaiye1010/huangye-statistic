@@ -60,7 +60,23 @@ public class Hello2 {
 //                bar();
 //            }
 //        }.start();
-//        bar();
+        bar();
+
+//        testf(10);
+    }
+
+
+    public static void testf(int i){
+        i--;
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        if(i<1){
+            return;
+        }
+        testf(i);
     }
 
     private static ThreadLocal<Integer> threadLocal=new ThreadLocal<Integer>(){
