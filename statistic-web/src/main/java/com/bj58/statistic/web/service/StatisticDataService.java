@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.bj58.huangye.statistic.core.redis.RedisConfigEnum;
 import com.bj58.huangye.statistic.core.redis.RedisConst;
 import com.bj58.huangye.statistic.core.redis.RedisFactory;
+import com.bj58.huangye.statistic.core.util.CalendarUtil;
 import com.bj58.statistic.web.util.HttpRequest;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
@@ -17,8 +18,8 @@ import java.util.*;
 @Service
 public class StatisticDataService {
     private static final String XHPROF_SAVE_URL="http://10.9.193.121/save.php";
-    private static final String XHPROF_CALL_GRAPH_URL="http://10.9.193.121/callgraph.php?run=%s&source=xhprof_huangye";
-    private static final String XHPROF_CALL_TEXT_URL="http://10.9.193.121/index.php?run=5966f77904562&source=xhprof_huangye";
+    private static final String XHPROF_CALL_GRAPH_URL="http://10.9.193.121/statistic/callgraph/%s";
+    private static final String XHPROF_CALL_TEXT_URL="http://10.9.193.121/statistic/index/%s";
 
 
     private Jedis client;
@@ -88,6 +89,8 @@ public class StatisticDataService {
         }});
 
         client.set(key,runId);
+        long expireAt= CalendarUtil.getTomorrowDawnUinxTimestamp();
+        client.expireAt(key,expireAt);
         return runId;
     }
 
