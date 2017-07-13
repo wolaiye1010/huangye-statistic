@@ -51,6 +51,14 @@ public class StatisticDataService {
             res.add(resItemHashMap);
         }
         Collections.reverse(res);
+
+        Collections.sort(res, new Comparator<Map<String, Object>>() {
+            @Override
+            public int compare(Map<String, Object> x, Map<String, Object> y) {
+                return ((Date)y.get("request_time")).compareTo((Date)x.get("request_time"));
+            }
+        });
+
         return res;
     }
 
