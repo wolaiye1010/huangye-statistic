@@ -35,7 +35,7 @@ public class WebHookController {
             System.out.println("not exist");
             return;
         }
-        System.out.println("web hook");
+        System.out.println("web hook1");
 
 
         String requestBody = CommonUtils.getRequestBody(request);
@@ -43,12 +43,19 @@ public class WebHookController {
         Map map = JSON.parseObject(requestBody, Map.class);
 
         if(null==map||!"refs/heads/snapshot".equals(map.get("ref"))){
+
+            System.out.println("web hook2");
             return;
         }
+
+        System.out.println("web hook3");
 
         response.getWriter().write("---start--");
         Process exec = Runtime.getRuntime().exec(shellPath);
         response.getWriter().write("---end--");
+
+
+        System.out.println("web hook4");
         return;
     }
 }
