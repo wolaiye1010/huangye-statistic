@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.bj58.huangye</groupId>
-    <artifactId>com.bj58.huangye.statistic.client</artifactId>
+    <artifactId>com.bj58.huangye.statistic.demo</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 
     <parent>
@@ -16,29 +16,22 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.aspectj</groupId>
-            <artifactId>aspectjrt</artifactId>
-            <version>${aspectj.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>1.2.33</version>
-        </dependency>
-        <dependency>
             <groupId>com.bj58.huangye</groupId>
-            <artifactId>com.bj58.huangye.statistic.core</artifactId>
+            <artifactId>com.bj58.huangye.statistic.client</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.source-target.version>1.6</java.source-target.version>
-        <aspectj.version>1.8.9</aspectj.version>
-    </properties>
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>aspectj-maven-plugin</artifactId>
@@ -52,8 +45,16 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <aspectLibraries>
+                        <aspectLibrary>
+                            <groupId>com.bj58.huangye</groupId>
+                            <artifactId>com.bj58.huangye.statistic.client</artifactId>
+                        </aspectLibrary>
+                    </aspectLibraries>
                     <showWeaveInfo>true</showWeaveInfo>
-                    <complianceLevel>${java.source-target.version}</complianceLevel>
+                    <complianceLevel>1.6</complianceLevel>
+                    <Xlint>ignore</Xlint>
+                    <encoding>UTF-8</encoding>
                     <verbose>true</verbose>
                 </configuration>
             </plugin>
