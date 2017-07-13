@@ -19,6 +19,7 @@ import java.util.Map;
 @Controller
 public class WebHookController {
 
+    
     private static final String TOKEN="1aa740dbb228e25bf8f02dc563f1ee30";
 
     String shellPath="/opt/web/huangye-statistic/develop.sh";
