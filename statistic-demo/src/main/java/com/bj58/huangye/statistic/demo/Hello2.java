@@ -2,6 +2,8 @@ package com.bj58.huangye.statistic.demo;
 
 import org.junit.Test;
 
+import java.util.UUID;
+
 /**
  * Created by zhudongchang on 2017/6/30.
  */
@@ -61,6 +63,8 @@ public class Hello2 {
 //            }
 //        }.start();
         bar();
+
+        System.out.println(UUID.randomUUID());
 
 //        testf(10);
     }

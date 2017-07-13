@@ -160,6 +160,7 @@ public aspect HuangyeAspect {
         mainRoot.setName("main()");
         mainRoot.setChildRenCallTreeNodes(new ArrayList<CallTreeNode>());
         mainRoot.getChildRenCallTreeNodes().add(callTreeNode);
+        mainRoot.setSelfTime(0);
         callTreeNode.setParent(mainRoot);
         mainRoot.setParent(null);
 
@@ -209,7 +210,7 @@ public aspect HuangyeAspect {
 
     private void saveDataToRedis(String data){
         Jedis client = RedisFactory.getClient(RedisConfigEnum.TEST);
-        client.lpush(RedisConst.XHPROF_KEY,data);
+        client.hset(RedisConst.XHPROF_KEY,UUID.randomUUID().toString(),data);
         long expireAt= CalendarUtil.getTomorrowDawnUinxTimestamp();
         client.expireAt(RedisConst.XHPROF_KEY,expireAt);
     }

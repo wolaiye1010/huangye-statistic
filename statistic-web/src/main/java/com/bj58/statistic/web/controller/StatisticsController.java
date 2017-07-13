@@ -7,11 +7,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 
@@ -39,6 +37,7 @@ public class StatisticsController {
     @RequestMapping("/native_data")
     @ResponseBody
     public String nativeData(HttpServletRequest request){
+
         return request.getParameter("xhprof_data");
     }
 
@@ -52,5 +51,16 @@ public class StatisticsController {
     @ResponseBody
     public Object clearList(){
         return statisticDataService.clearList();
+    }
+
+
+    @RequestMapping("/xhprof_call_graph/{key}")
+    public String xhprofUrlCallGraph(@PathVariable String key){
+        return "redirect:"+statisticDataService.getXhprofUrlCallGraph(key);
+    }
+
+    @RequestMapping("/xhprof_call_text/{key}")
+    public String xhprofUrlCallText(@PathVariable String key){
+        return "redirect:"+statisticDataService.getXhprofUrlCallText(key);
     }
 }

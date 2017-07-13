@@ -9,6 +9,16 @@ public class XhprofDataNode {
 
     int wt;
 
+    int self;
+
+    public int getSelf() {
+        return self;
+    }
+
+    public void setSelf(int self) {
+        this.self = self;
+    }
+
     public int getCt() {
         return ct;
     }

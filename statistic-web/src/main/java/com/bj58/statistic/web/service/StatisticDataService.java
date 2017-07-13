@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.bj58.huangye.statistic.core.redis.RedisConfigEnum;
 import com.bj58.huangye.statistic.core.redis.RedisConst;
 import com.bj58.huangye.statistic.core.redis.RedisFactory;
+import com.bj58.statistic.web.util.HttpRequest;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 
@@ -15,6 +16,10 @@ import java.util.*;
  */
 @Service
 public class StatisticDataService {
+    private static final String XHPROF_SAVE_URL="http://10.9.193.121/save.php";
+    private static final String XHPROF_CALL_GRAPH_URL="http://10.9.193.121/callgraph.php?run=%s&source=xhprof_huangye";
+    private static final String XHPROF_CALL_TEXT_URL="http://10.9.193.121/index.php?run=5966f77904562&source=xhprof_huangye";
+
 
     private Jedis client;
 
@@ -24,51 +29,29 @@ public class StatisticDataService {
     }
 
     public List<Map<String, Object>> getList(){
-        List<String> lrange = client.lrange(RedisConst.XHPROF_KEY, 0, -1);
-        List<Map<String,Object>> list=new ArrayList<>();
-        lrange.forEach(x->{
-            Map map = JSON.parseObject(x, Map.class);
-            Map server = (Map)map.get("server");
-            map.put("url",String.format("http://%s%s",
-                    server.get("HTTP_HOST"),server.get("REQUEST_URI")));
+        List<Map<String,Object>> res=new ArrayList<>();
+        Map<String, String> map = client.hgetAll(RedisConst.XHPROF_KEY);
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            Map xhprofDataMap = JSON.parseObject(entry.getValue(), Map.class);
+            Map server = (Map)xhprofDataMap.get("server");
+            HashMap<String, Object> resItemHashMap = new HashMap<>();
+            resItemHashMap.put("request_time",
+                    new Date(Long.valueOf(server.get("REQUEST_TIME").toString())*1000));
 
-//            String firstCallKey = map.keySet().stream().filter(item -> {
-//                return item.toString().contains("main()==>");
-//            }).findFirst().get().toString();
-//            map.put("first_call",firstCallKey.replace("main()==>",""));
-            map.put("request_time",new Date(Long.valueOf(server.get("REQUEST_TIME").toString())*1000));
-            map.put("xhprof_data",x);
-
-//            for (Object o : map.entrySet()) {
-//                Map.Entry item=(Map.Entry)o;
-//
-//                String key=item.getKey().toString();
-//                if(key.contains("==>")){
-//
-//                    if(key.contains("isSatisfiedBy")){
-//
-//                        System.out.println(key);
-//                    }
-//
-//                    String[] split = key.split("==>");
-//                    if(split[0].equals(split[1])){
-//                        map.remove(item.getKey());
-//                    }
-//                }
-//            }
-            double totalTime=(Integer)(((Map)map.get("main()")).get("wt"))/1000.0;
-            map.put("total_time",totalTime);
+            double totalTime=(Integer)(((Map)xhprofDataMap.get("main()")).get("wt"))/1000.0;
+            resItemHashMap.put("total_time",totalTime);
             String className="";
             if(totalTime>100){
                 className="danger";
             }else if(totalTime>10){
                 className="warning";
             }
-
-            map.put("class_name",className);
-            list.add(map);
-        });
-        return list;
+            resItemHashMap.put("class_name",className);
+            resItemHashMap.put("hmap_key",entry.getKey());
+            res.add(resItemHashMap);
+        }
+        Collections.reverse(res);
+        return res;
     }
 
 
@@ -83,5 +66,29 @@ public class StatisticDataService {
     public boolean clearList() {
         client.del(RedisConst.XHPROF_KEY);
         return true;
+    }
+
+    public String getXhprofRunId(String key) {
+        String runIdCache = client.get(key);
+        if(null!=runIdCache){
+            return runIdCache;
+        }
+
+        String xhprofData = client.hget(RedisConst.XHPROF_KEY, key);
+        String runId = HttpRequest.sendPost(XHPROF_SAVE_URL, new HashMap() {{
+            put("xhprof_data", xhprofData);
+        }});
+
+        client.set(key,runId);
+        return runId;
+    }
+
+
+    public String getXhprofUrlCallGraph(String key){
+        return String.format(XHPROF_CALL_GRAPH_URL,getXhprofRunId(key));
+    }
+
+    public String getXhprofUrlCallText(String key){
+        return String.format(XHPROF_CALL_TEXT_URL,getXhprofRunId(key));
     }
 }
