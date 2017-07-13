@@ -70,8 +70,15 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <!--<mainClass>com.bj58.statistic.web.controller.StatisticApplication</mainClass>-->
+                    <mainClass>com.bj58.statistic.web.StatisticApplication</mainClass>
                 </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
