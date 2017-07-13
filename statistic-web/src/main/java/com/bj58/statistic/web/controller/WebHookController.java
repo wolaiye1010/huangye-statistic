@@ -32,8 +32,10 @@ public class WebHookController {
 
         File file=new File(shellPath);
         if(!file.exists()){
+            System.out.println("not exist");
             return;
         }
+        System.out.println("web hook");
 
 
         String requestBody = CommonUtils.getRequestBody(request);
