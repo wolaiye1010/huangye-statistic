@@ -73,23 +73,23 @@ public class Hello2 {
         bar();
         bar();
         bar();
-//        testf(10);
+        testf(10);
     }
 
 
     public static void testf(int i){
 //
-//        i--;
-//        try {
-//            System.out.println(i);
-//            Thread.sleep(100);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//        if(i<1){
-//            return;
-//        }
-//        testf(i);
+        i--;
+        try {
+            System.out.println(i);
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        if(i<1){
+            return;
+        }
+        testf(i);
     }
 
     private static ThreadLocal<Integer> threadLocal=new ThreadLocal<Integer>(){

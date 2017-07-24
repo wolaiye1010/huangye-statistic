@@ -66,29 +66,29 @@ public aspect HuangyeAspect {
         final long startTime = System.nanoTime();
 
 
-        //处理递归调用
-        do {
-            if(mapList.get().size()<=1){
-                break;
-            }
-
-            Map<String, Object> mapLastItem = mapList.get().get(mapList.get().size() - 1);
-            String lastMethod=mapLastItem.get("method").toString();
-
-            String lastMethodRes=lastMethod.replaceAll("@\\d+$","");
-            if(!lastMethodRes.equals(signature)||!mapLastItem.containsKey("start_time")){
-                break;
-            }
-
-            int recursionEndAppend=0;
-            if(lastMethod.contains("@")){
-                isRecursion=true;
-                recursionEndAppend=Integer.valueOf(lastMethod.split("@")[1]);
-            }
-
-            recursionEndAppend++;
-            signature+="@"+recursionEndAppend;
-        }while (false);
+//        //处理递归调用
+//        do {
+//            if(mapList.get().size()<=1){
+//                break;
+//            }
+//
+//            Map<String, Object> mapLastItem = mapList.get().get(mapList.get().size() - 1);
+//            String lastMethod=mapLastItem.get("method").toString();
+//
+//            String lastMethodRes=lastMethod.replaceAll("@\\d+$","");
+//            if(!lastMethodRes.equals(signature)||!mapLastItem.containsKey("start_time")){
+//                break;
+//            }
+//
+//            int recursionEndAppend=0;
+//            if(lastMethod.contains("@")){
+//                isRecursion=true;
+//                recursionEndAppend=Integer.valueOf(lastMethod.split("@")[1]);
+//            }
+//
+//            recursionEndAppend++;
+//            signature+="@"+recursionEndAppend;
+//        }while (false);
 
 
         HashMap<String, Object> startHashMap = new HashMap<String, Object>();
@@ -148,17 +148,42 @@ public aspect HuangyeAspect {
             }
         }
 
-        analysisExecTime(callTreeNode);
+        analysisExtInfo(callTreeNode);
         buildXhprofDataMap(callTreeNode);
     }
 
-    private void analysisExecTime(CallTreeNode callTreeNode){
+    private void analysisExtInfo(CallTreeNode callTreeNode){
         callTreeNode.setTotalTime(callTreeNode.getEndTime()-callTreeNode.getStartTime());
         long childRenExecTotal=0;
+
+        //处理递归
+        do {
+            if(callTreeNode.isRoot()){
+                break;
+            }
+
+            String name = callTreeNode.getName();
+            String parentName=callTreeNode.getParent().getName();
+            String parentNameReplace=parentName.replaceAll("@\\d+$","");
+            if(!parentNameReplace.equals(name)){
+                break;
+            }
+
+            int recursionEndAppend=0;
+            if(parentName.contains("@")){
+                recursionEndAppend=Integer.valueOf(parentName.split("@")[1]);
+            }
+
+            recursionEndAppend++;
+            name+="@"+recursionEndAppend;
+            callTreeNode.setName(name);
+        }while (false);
+
         for (CallTreeNode treeNode : callTreeNode.getChildRenCallTreeNodes()) {
-            analysisExecTime(treeNode);
+            analysisExtInfo(treeNode);
             childRenExecTotal+=treeNode.getTotalTime();
         }
+
         callTreeNode.setSelfTime(callTreeNode.getTotalTime()-childRenExecTotal);
     }
 
