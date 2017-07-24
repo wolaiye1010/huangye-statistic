@@ -37,7 +37,10 @@ public class Hello2 {
     }
 
 
+
+
     public static void main(String[] args) {
+
 //        new Thread("1"){
 //            @Override
 //            public void run() {
@@ -62,17 +65,18 @@ public class Hello2 {
 //                bar();
 //            }
 //        }.start();
-        bar();
+//        bar();
+//
+//        System.out.println(UUID.randomUUID());
 
-        System.out.println(UUID.randomUUID());
-
-//        testf(10);
+        testf(10);
     }
 
 
     public static void testf(int i){
         i--;
         try {
+            System.out.println(i);
             Thread.sleep(100);
         } catch (InterruptedException e) {
             e.printStackTrace();
