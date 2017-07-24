@@ -64,22 +64,31 @@ public aspect HuangyeAspect {
 
         String signature =thisJoinPoint.getSignature().toString();
         final long startTime = System.nanoTime();
-        if(mapList.get().size()>1){
-            //处理递归调用
+
+
+        //处理递归调用
+        do {
+            if(mapList.get().size()<=1){
+                break;
+            }
+
             Map<String, Object> mapLastItem = mapList.get().get(mapList.get().size() - 1);
             String lastMethod=mapLastItem.get("method").toString();
-            String lastMethodRes=lastMethod.replaceAll("@\\d+$","");
-            if(lastMethodRes.equals(signature)){
-                int recursionEndAppend=0;
-                if(lastMethod.contains("@")){
-                    isRecursion=true;
-                    recursionEndAppend=Integer.valueOf(lastMethod.split("@")[1]);
-                }
 
-                recursionEndAppend++;
-                signature+="@"+recursionEndAppend;
+            String lastMethodRes=lastMethod.replaceAll("@\\d+$","");
+            if(!lastMethodRes.equals(signature)||!mapLastItem.containsKey("start_time")){
+                break;
             }
-        }
+
+            int recursionEndAppend=0;
+            if(lastMethod.contains("@")){
+                isRecursion=true;
+                recursionEndAppend=Integer.valueOf(lastMethod.split("@")[1]);
+            }
+
+            recursionEndAppend++;
+            signature+="@"+recursionEndAppend;
+        }while (false);
 
 
         HashMap<String, Object> startHashMap = new HashMap<String, Object>();
