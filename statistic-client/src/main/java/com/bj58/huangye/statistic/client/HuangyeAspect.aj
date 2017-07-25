@@ -45,6 +45,8 @@ public aspect HuangyeAspect {
 
 
     Object around():bj58PointCut(){
+        System.out.println("zdc_log:cd145e6df4776fae4a4cedcadba637f20d436970");
+
 //    Object around():bj58Cfow(){
         boolean isCallMethod="method-call"==thisJoinPoint.getKind();
         if(isCallMethod){
@@ -53,8 +55,6 @@ public aspect HuangyeAspect {
         }
 
         if(isStackStart()){
-//            System.out.println(String.format("threadId:%s,threadName:%s  ----start----",
-//                    Thread.currentThread().getId(),Thread.currentThread().getName()));
             mapList.get().clear();
         }
 
@@ -65,32 +65,6 @@ public aspect HuangyeAspect {
         String signature =thisJoinPoint.getSignature().toString();
         final long startTime = System.nanoTime();
 
-
-//        //处理递归调用
-//        do {
-//            if(mapList.get().size()<=1){
-//                break;
-//            }
-//
-//            Map<String, Object> mapLastItem = mapList.get().get(mapList.get().size() - 1);
-//            String lastMethod=mapLastItem.get("method").toString();
-//
-//            String lastMethodRes=lastMethod.replaceAll("@\\d+$","");
-//            if(!lastMethodRes.equals(signature)||!mapLastItem.containsKey("start_time")){
-//                break;
-//            }
-//
-//            int recursionEndAppend=0;
-//            if(lastMethod.contains("@")){
-//                isRecursion=true;
-//                recursionEndAppend=Integer.valueOf(lastMethod.split("@")[1]);
-//            }
-//
-//            recursionEndAppend++;
-//            signature+="@"+recursionEndAppend;
-//        }while (false);
-
-
         HashMap<String, Object> startHashMap = new HashMap<String, Object>();
         startHashMap.put("method", signature);
         startHashMap.put("start_time", startTime);
@@ -100,21 +74,14 @@ public aspect HuangyeAspect {
 
         final long endTime = System.nanoTime();
 
-        if(isRecursion){
-
-        }
-
         HashMap<String, Object> endHashMap = new HashMap<String, Object>();
         endHashMap.put("method", signature);
         endHashMap.put("end_time", endTime);
         mapList.get().add(endHashMap);
 
-
         stackCount.set(stackCount.get()-1);
 
         if(isStackEnd()){
-//            System.out.println(String.format("threadId:%s,threadName:%s  ----end----",
-//                    Thread.currentThread().getId(),Thread.currentThread().getName()));
             analysis();
             mapList.remove();
             stackCount.remove();
