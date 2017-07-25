@@ -45,8 +45,6 @@ public aspect HuangyeAspect {
 
 
     Object around():bj58PointCut(){
-        System.out.println("zdc_log:cd145e6df4776fae4a4cedcadba637f20d436970");
-
 //    Object around():bj58Cfow(){
         boolean isCallMethod="method-call"==thisJoinPoint.getKind();
         if(isCallMethod){
@@ -82,6 +80,7 @@ public aspect HuangyeAspect {
         stackCount.set(stackCount.get()-1);
 
         if(isStackEnd()){
+            System.out.println("zdc_log:cd145e6df4776fae4a4cedcadba637f20d436970");
             analysis();
             mapList.remove();
             stackCount.remove();
